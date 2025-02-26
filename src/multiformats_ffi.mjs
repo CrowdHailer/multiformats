@@ -6,8 +6,13 @@ export function code() {
   return dagJSON.code
 }
 
-export function digest(data) {
+export function sha256Digest(data) {
   return sha256.digest(data.buffer)
+}
+
+export function sha256BrowserDigest(data) {
+  const result = sha256Digest(data)
+  return result instanceof Promise ? result : new Promise((resolve) => resolve(result))
 }
 
 export function cid_create_v1(code, digest) {
