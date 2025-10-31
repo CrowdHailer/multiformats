@@ -18,7 +18,9 @@ pub fn to_bytes(cid) {
 
 pub fn to_string(cid) {
   use bytes <- try(to_bytes(cid))
-  Ok("b" <> base32.encode(bytes))
+  let encoded =
+    base32.encode(bytes) |> string.lowercase |> string.replace("=", "")
+  Ok("b" <> encoded)
 }
 
 pub fn from_bytes(cid) {
