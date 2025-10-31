@@ -1,7 +1,7 @@
 name = "multiformats"
 version = "2.0.0"
 target = "javascript"
-description = "Bindings to the js implementation of multiformats"
+description = "implementation of multiformats from for IPFS content identifier (CID)"
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "crowdhailer", repo = "multiformats" }
 links = []
