@@ -1,7 +1,9 @@
-//// This module only works on node
+//// This module only works on node and erlang
 //// The *_browser module will work on node and browser using the WebCrypto API
 
-import multiformats/hashes/digest.{type Digest}
+import gleam/crypto
+import multiformats/hashes
 
-@external(javascript, "../../multiformats_ffi.mjs", "sha256Digest")
-pub fn digest(bytes: BitArray) -> Digest
+pub fn digest(bytes: BitArray) {
+  hashes.Multihash(hashes.Sha256, crypto.hash(crypto.Sha256, bytes))
+}

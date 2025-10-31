@@ -1,14 +1,13 @@
 # multiformats
 
-Bindings to the [js implementation](https://github.com/multiformats/js-multiformats) of multiformats.
-
 [![Package Version](https://img.shields.io/hexpm/v/multiformats)](https://hex.pm/packages/multiformats)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/multiformats/)
+
+
 
 Currently only the sha256 hasher is supported.
 
 ```sh
-npm install --save multiformats@13
 gleam add multiformats@1
 ```
 
@@ -27,6 +26,10 @@ pub fn main() {
 ```
 
 Further documentation can be found at <https://hexdocs.pm/multiformats>.
+
+## Explore CID's
+
+https://cid.ipfs.tech/
 
 ## Use in the browser
 
