@@ -1,7 +1,7 @@
 name = "multiformats"
-version = "2.0.3"
+version = "3.0.0"
 target = "javascript"
-description = "implementation of multiformats from for IPFS content identifier (CID)"
+description = "Multiformats for IPFS content identifier (CID). Includes base32 and leb128 helpers."
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "crowdhailer", repo = "multiformats" }
 links = []
@@ -11,7 +11,6 @@ gleam_stdlib = ">= 0.44.0 and < 2.0.0"
 gleam_javascript = ">= 1.0.0 and < 2.0.0"
 base32 = ">= 1.0.0 and < 2.0.0"
 gleb128 = ">= 4.0.0 and < 5.0.0"
-gleam_crypto = ">= 1.5.1 and < 2.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"

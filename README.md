@@ -1,9 +1,9 @@
 # multiformats
 
+Multiformats for IPFS content identifier (CID). Includes base32 and leb128 helpers
+
 [![Package Version](https://img.shields.io/hexpm/v/multiformats)](https://hex.pm/packages/multiformats)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/multiformats/)
-
-
 
 Currently only the sha256 hasher is supported.
 
@@ -14,12 +14,13 @@ gleam add multiformats@1
 ```gleam
 import dag_json
 import multiformats/cid
-import multiformats/hashes/sha256
+import multiformats/hashes.{Multihash, Sha256}
 
 pub fn main() {
   let data = // some json
   let bytes = dag_json.encode(data)
-  let multihash = sha256.digest(bytes)
+  let hashed = todo as "sha256 digest"
+  let multihash = Multihash(Sha256,hashed)
   cid.create_v1(dag_json.code(), multihash)
   |> cid.to_string
 }
@@ -31,31 +32,11 @@ Further documentation can be found at <https://hexdocs.pm/multiformats>.
 
 https://cid.ipfs.tech/
 
-## Use in the browser
+## Hashing
 
-This version exposes a promises based API that works in the browser and on node.
-node has an implementation of the WebCrypto API.
-
-The javascript package that this module binds to is indicated using the `browser` field of the `package.json` file. [more info](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#browser).
-
-If bundling you need to ensure that your bundler will use this field.
-For example rollup using the [@rollup/plugin-node-resolve](https://www.npmjs.com/package/@rollup/plugin-node-resolve) plugin requires configuring as the [default behaviour](https://www.npmjs.com/package/@rollup/plugin-node-resolve#browser) is to ignore the browser field.
-
-```gleam
-import dag_json
-import multiformats/cid
-import multiformats/hashes/sha256_browser as sha256
-import gleam/javascript/promise
-
-pub fn main() {
-  let data = // some json
-  let bytes = dag_json.encode(data)
-  use multihash <- promise.map(sha256.digest(bytes))
-  cid.create_v1(dag_json.code(), multihash)
-  |> cid.to_string
-}
-```
-
+The actual hashing process depends on the platform you are running on.
+If running in the browser, `plinth` is recommended.
+For both node and erlang, `gleam_crypto` is recommended.
 
 ## Development
 
