@@ -1,6 +1,6 @@
 # multiformats
 
-Multiformats for IPFS content identifier (CID). Includes base32 and leb128 helpers
+Multiformats for IPFS content identifier (CID). Includes base32 helpers.
 
 [![Package Version](https://img.shields.io/hexpm/v/multiformats)](https://hex.pm/packages/multiformats)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/multiformats/)

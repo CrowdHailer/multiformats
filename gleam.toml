@@ -1,5 +1,5 @@
 name = "multiformats"
-version = "3.0.0"
+version = "4.0.0"
 target = "javascript"
 description = "Multiformats for IPFS content identifier (CID). Includes base32 and leb128 helpers."
 licences = ["Apache-2.0"]

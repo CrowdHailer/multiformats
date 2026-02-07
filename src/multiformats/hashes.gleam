@@ -43,7 +43,9 @@ pub fn decode(buffer) {
 pub fn encode(hash) {
   let Multihash(algorithm:, digest:) = hash
   let code = code(algorithm)
-  use code <- try(leb128.encode(code))
-  use length <- try(leb128.encode(bit_array.byte_size(digest)))
-  Ok(<<code:bits, length:bits, digest:bits>>)
+  // code is alway positive
+  let assert Ok(code) = leb128.encode(code)
+  // length is always positive
+  let assert Ok(length) = leb128.encode(bit_array.byte_size(digest))
+  <<code:bits, length:bits, digest:bits>>
 }

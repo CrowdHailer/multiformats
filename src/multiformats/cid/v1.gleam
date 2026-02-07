@@ -1,3 +1,4 @@
+import gleam/int
 import gleam/result.{try}
 import gleam/string
 import multiformats/base32
@@ -8,19 +9,23 @@ pub type Cid {
   Cid(content_type: Int, content: hashes.Multihash)
 }
 
+/// Convert a decoded CID to it's binary representation
 pub fn to_bytes(cid) {
   let Cid(content_type, content) = cid
   let assert Ok(cid_version) = leb128.encode(1)
-  use content_type <- try(leb128.encode(content_type))
-  use content <- try(hashes.encode(content))
-  Ok(<<cid_version:bits, content_type:bits, content:bits>>)
+  // content types should be positive.
+  // This table shows the latest declared values https://github.com/multiformats/multicodec/blob/master/table.csv
+  let assert Ok(content_type) = leb128.encode(int.max(content_type, 0))
+  let content = hashes.encode(content)
+  <<cid_version:bits, content_type:bits, content:bits>>
 }
 
+/// Convert a decoded CID to it's string representation
 pub fn to_string(cid) {
-  use bytes <- try(to_bytes(cid))
+  let bytes = to_bytes(cid)
   let encoded =
     base32.encode(bytes) |> string.lowercase |> string.replace("=", "")
-  Ok("b" <> encoded)
+  "b" <> encoded
 }
 
 pub fn from_bytes(cid) {
