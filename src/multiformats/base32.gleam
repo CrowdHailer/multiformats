@@ -1,76 +1,86 @@
 import gleam/bit_array
+import gleam/result
 
-@external(erlang, "multiformats_ffi", "decode32")
+/// Decode base32 text and panic if it is not valid.
 pub fn decode(encoded: String) -> BitArray {
+  let assert Ok(decoded) = try_decode(encoded)
+  decoded
+}
+
+/// Decode base32 text, with or without padding.
+@external(erlang, "multiformats_ffi", "try_decode32")
+pub fn try_decode(encoded: String) -> Result(BitArray, Nil) {
   do_decode(bit_array.from_string(encoded))
 }
 
 fn do_decode(encoded) {
   case encoded {
-    <<>> -> <<>>
+    <<>> -> Ok(<<>>)
     <<a, b>> | <<a, b, "======">> -> {
-      let assert <<out:bytes-size(1), _>> = <<
-        num(a):5,
-        num(b):5,
-        0:6,
-      >>
-      out
+      use a <- result.try(num(a))
+      use b <- result.try(num(b))
+      let assert <<out:bytes-size(1), _>> = <<a:5, b:5, 0:6>>
+      Ok(out)
     }
     <<a, b, c, d>> | <<a, b, c, d, "====">> -> {
-      let assert <<out:bytes-size(2), _>> = <<
-        num(a):5,
-        num(b):5,
-        num(c):5,
-        num(d):5,
-        0:4,
-      >>
-      out
+      use a <- result.try(num(a))
+      use b <- result.try(num(b))
+      use c <- result.try(num(c))
+      use d <- result.try(num(d))
+      let assert <<out:bytes-size(2), _>> = <<a:5, b:5, c:5, d:5, 0:4>>
+      Ok(out)
     }
     <<a, b, c, d, e>> | <<a, b, c, d, e, "===">> -> {
-      let assert <<out:bytes-size(3), _>> = <<
-        num(a):5,
-        num(b):5,
-        num(c):5,
-        num(d):5,
-        num(e):5,
-        0:7,
-      >>
-      out
+      use a <- result.try(num(a))
+      use b <- result.try(num(b))
+      use c <- result.try(num(c))
+      use d <- result.try(num(d))
+      use e <- result.try(num(e))
+      let assert <<out:bytes-size(3), _>> = <<a:5, b:5, c:5, d:5, e:5, 0:7>>
+      Ok(out)
     }
     <<a, b, c, d, e, f, g>> | <<a, b, c, d, e, f, g, "=">> -> {
+      use a <- result.try(num(a))
+      use b <- result.try(num(b))
+      use c <- result.try(num(c))
+      use d <- result.try(num(d))
+      use e <- result.try(num(e))
+      use f <- result.try(num(f))
+      use g <- result.try(num(g))
       let assert <<out:bytes-size(4), _>> = <<
-        num(a):5,
-        num(b):5,
-        num(c):5,
-        num(d):5,
-        num(e):5,
-        num(f):5,
-        num(g):5,
+        a:5,
+        b:5,
+        c:5,
+        d:5,
+        e:5,
+        f:5,
+        g:5,
         0:5,
       >>
-      out
+      Ok(out)
     }
-    <<a, b, c, d, e, f, g, h, rest:bytes>> -> <<
-      num(a):5,
-      num(b):5,
-      num(c):5,
-      num(d):5,
-      num(e):5,
-      num(f):5,
-      num(g):5,
-      num(h):5,
-      do_decode(rest):bits,
-    >>
-    _ -> panic as "Invalid base32 string"
+    <<a, b, c, d, e, f, g, h, rest:bytes>> -> {
+      use a <- result.try(num(a))
+      use b <- result.try(num(b))
+      use c <- result.try(num(c))
+      use d <- result.try(num(d))
+      use e <- result.try(num(e))
+      use f <- result.try(num(f))
+      use g <- result.try(num(g))
+      use h <- result.try(num(h))
+      use rest <- result.try(do_decode(rest))
+      Ok(<<a:5, b:5, c:5, d:5, e:5, f:5, g:5, h:5, rest:bits>>)
+    }
+    _ -> Error(Nil)
   }
 }
 
 fn num(a) {
   case a {
-    a if a >= 65 && a <= 90 -> a - 65
-    a if a >= 97 && a <= 122 -> a - 97
-    a if a >= 50 && a <= 55 -> a - 24
-    _ -> panic as "Invalid base32 charachter"
+    a if a >= 65 && a <= 90 -> Ok(a - 65)
+    a if a >= 97 && a <= 122 -> Ok(a - 97)
+    a if a >= 50 && a <= 55 -> Ok(a - 24)
+    _ -> Error(Nil)
   }
 }
 

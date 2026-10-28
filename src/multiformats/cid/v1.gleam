@@ -62,7 +62,9 @@ pub fn from_string(cid) {
         False -> Error("not v0 but also not a known encoding")
       }
 
-    "b" <> rest -> Ok(base32.decode(rest))
+    "b" <> rest ->
+      base32.try_decode(rest)
+      |> result.replace_error("invalid base32 encoding")
     _ -> Error("unsuppoted multibase encoding")
   })
   from_bytes(decoded)
